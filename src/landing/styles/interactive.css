@@ -1,0 +1,170 @@
+/* ─────────────────────────────────────────────────────────────
+   Interactive layer: live hero preview, chart, voice demo,
+   workflow test run, live meeting and card hover effects.
+   ───────────────────────────────────────────────────────────── */
+
+/* ───────── Hero demo bar ───────── */
+.hero__demo-bar { display: grid; justify-items: center; gap: 14px; margin-bottom: 20px; }
+.hero__hint { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--muted); }
+.hero__hint svg { width: 16px; height: 16px; color: var(--accent); animation: nudge 1.8s ease-in-out infinite; }
+.hero__hint b { color: var(--navy); font-weight: 600; }
+@keyframes nudge { 50% { transform: translate(2px, 2px); } }
+.hero__tabs {
+  display: flex; gap: 4px; padding: 4px; max-width: 100%; overflow-x: auto; scrollbar-width: none;
+  border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--border), var(--shadow-sm);
+}
+.hero__tabs::-webkit-scrollbar { display: none; }
+.hero__tabs button {
+  flex: none; display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 9px;
+  font-size: var(--fs-sm); font-weight: 500; color: var(--slate-2); white-space: nowrap; transition: background-color .2s, color .2s;
+}
+.hero__tabs button svg { width: 15px; height: 15px; }
+.hero__tabs button:hover { color: var(--navy); background: var(--bg-alt); }
+.hero__tabs button.is-active { background: var(--navy); color: #fff; }
+@media (max-width: 640px) { .hero__tabs { justify-content: flex-start; } }
+
+/* ───────── App shell in interactive mode ───────── */
+.app { position: relative; }
+.app--interactive button.app__nav-item { width: 100%; text-align: left; cursor: pointer; transition: background-color .2s, color .2s; }
+.app--interactive.app--compact button.app__nav-item { width: 42px; }
+.app--interactive button.app__nav-item:not(.is-active):hover { background: #f4f5f7; }
+.app__voice--live { cursor: pointer; transition: transform .2s, box-shadow .2s; animation: voicePulse 2.4s ease-in-out infinite; }
+.app__voice--live:hover { transform: translateY(-1px); }
+@keyframes voicePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(52, 120, 246, .35); } 50% { box-shadow: 0 0 0 7px rgba(52, 120, 246, 0); } }
+.app--interactive .app__body { animation: viewIn .35s var(--ease) both; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(6px); } }
+
+.app-overlay { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background: rgba(16, 24, 40, .35); backdrop-filter: blur(2px); animation: viewIn .25s ease both; }
+.app-overlay__panel { width: 580px; background: #fff; border-radius: 18px; box-shadow: 0 40px 80px -20px rgba(16, 24, 40, .45); padding: 20px; }
+.app-overlay__head { display: flex; justify-content: space-between; align-items: center; padding: 0 2px 14px; font-size: 16px; color: var(--navy); }
+.app-overlay__head button { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; color: var(--muted); }
+.app-overlay__head button:hover { background: #f2f4f7; }
+.app-overlay__panel .ai-panel { box-shadow: none; border: 0; padding: 0; }
+
+/* ───────── Tasks ───────── */
+.task-check { display: grid; place-items: center; width: 22px; height: 22px; margin: -3px; border-radius: 50%; color: #c4cad4; cursor: pointer; transition: color .2s, transform .2s; }
+.task-check:hover { color: var(--accent); transform: scale(1.12); }
+.task-check .ok { animation: pop .3s var(--ease); }
+@keyframes pop { 0% { transform: scale(.4); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+/* ───────── Dashboard: counters, funnel, chart ───────── */
+.ov__funnel-bar i { transition: width 1s var(--ease); }
+.ov:not(.is-in) .ov__funnel-bar i { width: 0 !important; }
+.ov__ranges button, .ov__ranges span { padding: 5px 12px; border-radius: 99px; }
+.ov__ranges .is-active { background: var(--accent-50); color: var(--accent); font-weight: 600; }
+.ov__ranges button { cursor: pointer; transition: background-color .2s; }
+.ov__ranges button:not(.is-active):hover { background: #f2f4f7; }
+.ov__plot { position: relative; cursor: crosshair; }
+.ov__plot svg { clip-path: inset(0 100% 0 0); }
+.ov__plot svg.is-drawn { animation: wipe 1.3s var(--ease) forwards; }
+@keyframes wipe { to { clip-path: inset(0 0 0 0); } }
+.ov__cursor { position: absolute; top: 0; height: 190px; width: 1px; background: #98a2b3; pointer-events: none; }
+.ov__dot { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; border: 2px solid #d0d5dd; pointer-events: none; }
+.ov__dot--now { border-color: #f59e0b; }
+.ov__tip { position: absolute; top: 6px; transform: translateX(14px); z-index: 2; display: grid; gap: 4px; min-width: 190px; padding: 10px 12px; border-radius: 10px; background: var(--navy); color: #d0d5dd; font-size: 12px; pointer-events: none; box-shadow: 0 12px 24px -8px rgba(16, 24, 40, .4); }
+.ov__tip.is-left { transform: translateX(calc(-100% - 14px)); }
+.ov__tip b { color: #fff; font-weight: 600; }
+.ov__tip span { display: flex; align-items: center; gap: 6px; }
+.ov__tip i { width: 8px; height: 8px; border-radius: 50%; }
+.ov__tip em { margin-left: auto; font-style: normal; color: #fff; font-weight: 600; }
+
+/* ───────── Chat ───────── */
+.chat { display: grid; grid-template-columns: 240px 1fr; gap: 16px; height: 700px; }
+.chat__list { display: flex; flex-direction: column; gap: 2px; padding: 14px 10px; }
+.chat__list small { padding: 10px 10px 6px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+.chat__chan { position: relative; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; color: var(--slate); font-weight: 500; }
+.chat__chan svg { width: 14px !important; height: 14px !important; color: var(--faint); }
+.chat__chan.is-active { background: var(--accent-50); color: var(--accent); }
+.chat__chan.is-active svg { color: var(--accent); }
+.chat__chan em { margin-left: auto; font-style: normal; font-size: 11px; font-weight: 600; color: #fff; background: var(--accent); padding: 0 6px; border-radius: 99px; }
+.chat__online { position: absolute; left: 25px; top: 22px; width: 7px; height: 7px; border-radius: 50%; background: var(--success); border: 1.5px solid #fff; }
+.chat__thread { display: flex; flex-direction: column; padding: 0 !important; overflow: hidden; }
+.chat__head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #eef0f2; }
+.chat__head b { display: flex; align-items: center; gap: 6px; color: var(--navy); font-size: 14px; }
+.chat__msgs { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 14px; padding: 18px; overflow: hidden; }
+.chat__msg { display: flex; gap: 10px; max-width: 75%; animation: viewIn .3s var(--ease) both; }
+.chat__msg p { margin-top: 4px; padding: 9px 13px; border-radius: 4px 14px 14px 14px; background: #f4f5f7; color: var(--navy); font-size: 13px; line-height: 1.45; }
+.chat__msg.is-me { align-self: flex-end; }
+.chat__msg.is-me > div { text-align: right; }
+.chat__msg.is-me p { border-radius: 14px 4px 14px 14px; background: var(--accent); color: #fff; text-align: left; }
+.chat__meta { font-size: 11.5px; color: var(--faint); }
+.chat__meta b { color: var(--navy); font-weight: 600; margin-right: 4px; }
+.chat__composer { display: flex; align-items: center; gap: 10px; margin: 0 18px 18px; padding: 6px 6px 6px 14px; border: 1px solid #e4e7ec; border-radius: 12px; color: var(--faint); }
+.chat__composer input, .chat__composer > span { flex: 1; border: 0; outline: 0; background: transparent; font-size: 13px; color: var(--navy); }
+.chat__composer:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-100); }
+.chat__composer button { height: 32px; cursor: pointer; }
+.chat__composer button:disabled { cursor: default; }
+
+/* ───────── Voice demo ───────── */
+.voice__mic { cursor: pointer; transition: transform .2s; border: 0; }
+.voice__mic:hover { transform: scale(1.06); }
+.voice__mic.is-listening { animation: micPulse 1.2s ease-in-out infinite; }
+@keyframes micPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(52, 120, 246, .5); } 50% { box-shadow: 0 0 0 10px rgba(52, 120, 246, 0); } }
+.voice__status { font-size: 12.5px; color: #c3cad6; white-space: nowrap; }
+.voice__wave i { animation-play-state: paused; transform: scaleY(.25); }
+.voice__wave.is-live i { animation-play-state: running; }
+.voice__quote { min-height: 3.2em; }
+.voice__caret { display: inline-block; width: 2px; height: 1.1em; margin-left: 2px; vertical-align: -0.15em; background: var(--accent); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.voice__placeholder { color: var(--faint); font-weight: 400; }
+.voice__skeleton { display: inline-block; width: 60%; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #f0f2f5 25%, #e4e7ec 50%, #f0f2f5 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.voice__draft dd.is-filled { animation: viewIn .3s var(--ease) both; }
+.voice__btns button { cursor: pointer; }
+.voice__btns button:disabled { opacity: .45; cursor: default; }
+.voice__done { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-top: 1px solid var(--border); background: var(--success-50); color: #0f7b4f; font-size: 13px; font-weight: 500; animation: viewIn .3s var(--ease) both; }
+.voice__done svg { width: 18px; height: 18px; }
+.voice__done button { margin-left: auto; color: var(--navy); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.voice__examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.voice__examples > span { width: 100%; font-size: 11.5px; color: var(--muted); }
+.voice__examples button { padding: 5px 10px; border-radius: 99px; border: 1px solid var(--border); font-size: 12px; color: var(--slate); cursor: pointer; transition: border-color .2s, color .2s, background-color .2s; text-align: left; }
+.voice__examples button:hover { border-color: var(--accent); color: var(--accent); }
+.voice__examples button.is-active { background: var(--accent-50); border-color: var(--accent-100); color: var(--accent); }
+
+/* ───────── Workflow test run ───────── */
+.flow__toolbar { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 16px; }
+.flow__toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 500; color: var(--slate); cursor: pointer; }
+.flow__switch { position: relative; width: 32px; height: 18px; border-radius: 99px; background: #d0d5dd; transition: background-color .2s; }
+.flow__switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .2s var(--ease); box-shadow: 0 1px 2px rgba(16, 24, 40, .2); }
+.flow__toggle[aria-pressed='true'] .flow__switch { background: var(--success); }
+.flow__toggle[aria-pressed='true'] .flow__switch::after { transform: translateX(14px); }
+.flow__run { cursor: pointer; }
+.flow__run:disabled { opacity: .6; cursor: default; }
+.flow__node { transition: border-color .3s, box-shadow .3s, transform .3s var(--ease); }
+.flow__node.is-run { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50); transform: translateY(-1px); }
+.flow__node .flow__check { margin-left: auto; width: 18px !important; height: 18px !important; color: var(--success); animation: pop .3s var(--ease); }
+.flow__result { width: 100%; margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--success-50); color: #0f7b4f; font-size: 12.5px; font-weight: 500; text-align: center; animation: viewIn .3s var(--ease) both; }
+
+/* ───────── Live meeting ───────── */
+.intel__transcript li { animation: viewIn .4s var(--ease) both; }
+.intel__typing { display: inline-flex; gap: 3px; padding: 6px 0 0 28px; }
+.intel__typing i { width: 5px; height: 5px; border-radius: 50%; background: #c4cad4; animation: typing 1s ease-in-out infinite; }
+.intel__typing i:nth-child(2) { animation-delay: .15s; }
+.intel__typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typing { 50% { transform: translateY(-3px); background: var(--accent); } }
+.intel__item { animation: viewIn .4s var(--ease) both; }
+.tile.is-talking::after { content: ''; position: absolute; right: 8px; top: 8px; width: 14px; height: 10px; background: linear-gradient(90deg, #7aa7ff 2px, transparent 2px 4px, #7aa7ff 4px 6px, transparent 6px 8px, #7aa7ff 8px 10px, transparent 10px); animation: eq .6s ease-in-out infinite alternate; transform-origin: bottom; }
+@keyframes eq { from { transform: scaleY(.4); } to { transform: scaleY(1); } }
+
+/* ───────── Platform card spotlight ───────── */
+.module { position: relative; }
+.module::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(52, 120, 246, .09), transparent 60%);
+}
+.module:hover::before { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ov__plot svg { clip-path: none; animation: none; }
+  .app__voice--live, .hero__hint svg { animation: none; }
+}
+
+/* Meeting pipeline steps are clickable */
+.mpipe__btn { display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left; cursor: pointer; color: inherit; }
+.mpipe__btn > span:last-child { display: grid; }
+.mpipe__btn:hover b { color: var(--accent); }
+.intel__waiting { font-size: 12px; color: var(--muted); }
+@media (max-width: 640px) {
+  .hero__hint { display: block; text-align: center; }
+  .hero__hint svg { display: inline; vertical-align: -3px; margin-right: 6px; }
+}

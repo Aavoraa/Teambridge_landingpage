@@ -1,0 +1,61 @@
+/* Policy pages: plain reading layout in the site's palette. */
+.lg-top {
+  position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  height: 68px; padding-inline: var(--side); background: rgba(255, 255, 255, 0.95); border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(6px);
+}
+.lg-top .logo { display: inline-flex; align-items: center; gap: 9px; }
+.lg-top .logo__word { font-size: 1.1rem; font-weight: 500; color: var(--ink); }
+.lg-top__back { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--ink); }
+.lg-top__back:hover { color: var(--royal); }
+.lg-top__back svg { width: 16px; height: 16px; }
+
+.lg-draft { margin: 0; padding: 10px var(--side); background: #FDF5E8; color: #7A4A08; font-size: 0.86rem; text-align: center; }
+
+.lg { display: grid; grid-template-columns: 260px minmax(0, 760px); justify-content: center; gap: clamp(32px, 5vw, 72px); padding: 48px var(--side) 80px; }
+.lg__side { position: sticky; top: 92px; align-self: start; display: grid; gap: 28px; max-height: calc(100vh - 110px); overflow: auto; }
+.lg__docs { display: grid; gap: 4px; }
+.lg__docs a { padding: 9px 12px; border-radius: 10px; font-size: 0.9rem; color: var(--ink); }
+.lg__docs a:hover { background: var(--panel); }
+.lg__docs a[aria-current='page'] { background: var(--ink); color: #fff; }
+.lg__toc > span { display: block; margin-bottom: 8px; padding-left: 12px; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6F7A90; }
+.lg__toc ol { display: grid; gap: 2px; }
+.lg__toc a { display: block; padding: 5px 12px; border-left: 2px solid var(--line); font-size: 0.84rem; line-height: 1.35; color: var(--text); }
+.lg__toc a:hover { color: var(--ink); }
+.lg__toc a.is-on { border-color: var(--royal); color: var(--royal); }
+
+.lg__main h1 { font-size: clamp(2rem, 1.4rem + 2vw, 3rem); line-height: 1.1; }
+.lg__updated { margin-top: 10px; font-size: 0.86rem; color: #6F7A90; }
+.lg__intro { margin-top: 22px; padding: 18px 20px; border-radius: 14px; background: var(--panel); }
+.lg__intro p + p { margin-top: 10px; }
+.lg__main section { padding-top: 34px; scroll-margin-top: 84px; }
+.lg__main h2 { font-size: 1.3rem; font-weight: 500; margin-bottom: 12px; }
+.lg__main h3 { font-size: 1.02rem; font-weight: 500; margin: 18px 0 8px; }
+.lg__main p, .lg__main li { font-size: 0.98rem; line-height: 1.7; color: #3E4A62; }
+.lg__main p + p, .lg__main p + ul, .lg__main ul + p { margin-top: 10px; }
+.lg__main ul { display: grid; gap: 6px; padding-left: 20px; list-style: disc; }
+.lg__main li::marker { color: var(--royal); }
+.lg__main strong { color: var(--ink); font-weight: 600; }
+.lg__main a { color: var(--royal); text-decoration: underline; text-underline-offset: 3px; }
+.lg__main table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 0.92rem; }
+.lg__main th, .lg__main td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.5; color: #3E4A62; }
+.lg__main th { background: var(--panel); color: var(--ink); font-weight: 500; }
+.lg-missing { padding: 1px 6px; border-radius: 6px; background: #FFF1CC; color: #7A4A08; font-weight: 500; }
+.lg-contact { display: grid; gap: 4px; margin-top: 10px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; }
+
+.lg-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 28px; padding: 28px var(--side) 36px; border-top: 1px solid var(--line); font-size: 0.86rem; }
+.lg-foot nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.lg-foot a { color: var(--ink); }
+.lg-foot a:hover { color: var(--royal); }
+
+@media (max-width: 900px) {
+  .lg { grid-template-columns: minmax(0, 1fr); padding-top: 28px; }
+  .lg__side { position: static; max-height: none; }
+  .lg__toc { display: none; }
+  .lg__docs { grid-auto-flow: column; overflow-x: auto; }
+  .lg__docs a { white-space: nowrap; }
+}
+@media print {
+  .lg-top, .lg__side, .lg-foot, .lg-draft { display: none; }
+  .lg { display: block; padding: 0; }
+}
